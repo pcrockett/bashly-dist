@@ -27,7 +27,7 @@ jobs:
       - uses: jdx/mise-action@6612f0ef07ed2a736cd1e00a94a065522dd41195  # v5.2.5
       - run: just lint
 
-  build-linux-x64:
+  build:
     strategy:
       matrix:
         os: [linux, macos]
