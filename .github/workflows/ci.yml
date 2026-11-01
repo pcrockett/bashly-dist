@@ -35,7 +35,7 @@ jobs:
 
       - uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9  # v6.1.0
         with:
-          path: build/gems/cache
+          path: .gem-cache
           key: gem-cache|${{ hashFiles('mise.toml') }}|${{ hashFiles('mise.lock') }}|${{ hashFiles('justfile') }}
 
       - uses: jdx/mise-action@6612f0ef07ed2a736cd1e00a94a065522dd41195  # v5.2.5

@@ -17,14 +17,19 @@ latest-version:
 build version os arch: clean
     #!/usr/bin/env bash
     set -euo pipefail
+    mkdir -p build/gems
 
+    if [ -d .gem-cache ]; then
+        mv .gem-cache build/gems/cache
+    fi
     gem install bashly --version "{{version}}" --install-dir build/gems --no-document
+    mv build/gems/cache .gem-cache
 
     mkdir build/bin
     cp src/bashly-wrapper build/bin/bashly
 
-    mkdir -p build/tarball
-    tarball_path="build/tarball/bashly-{{version}}-{{os}}-{{arch}}.tar.gz"
+    mkdir -p artifacts
+    tarball_path="artifacts/bashly-{{version}}-{{os}}-{{arch}}.tar.gz"
     rm -f "${tarball_path}"
     tar czf "${tarball_path}" -C build bin gems
 
@@ -33,7 +38,7 @@ test version os arch:
     #!/usr/bin/env bash
     set -euo pipefail
     temp_dir="$(mktemp -d)"
-    tar xzf "build/tarball/bashly-{{version}}-{{os}}-{{arch}}.tar.gz" -C "${temp_dir}"
+    tar xzf "artifacts/bashly-{{version}}-{{os}}-{{arch}}.tar.gz" -C "${temp_dir}"
     bashly_version="$("${temp_dir}/bin/bashly" --version)"
     rm -rf "${temp_dir}"
     if [ "${bashly_version}" = "{{version}}" ]; then
@@ -43,9 +48,6 @@ test version os arch:
         exit 1
     fi
 
-# Delete everything in `build/gems` and `build/bin` except the cache
+# Delete `build` directory
 clean:
-    #!/usr/bin/env bash
-    set -euo pipefail
-    find build/gems -mindepth 1 -maxdepth 1 ! -name cache -exec rm -rf {} +
-    rm -rf build/bin
+    rm -rf build
