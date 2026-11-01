@@ -48,12 +48,13 @@ jobs:
 
       - name: Determine latest version of Bashly
         id: version
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
           echo "value=$(just latest-version)" >>"${GITHUB_OUTPUT}"
 
       - name: Build & Test
         env:
-          GH_TOKEN: ${{ github.token }}
           OS: ${{ matrix.os }}
           ARCH: ${{ matrix.arch }}
           VERSION: ${{ steps.version.outputs.value }}
