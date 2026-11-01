@@ -28,7 +28,13 @@ jobs:
       - run: just lint
 
   build-linux-x64:
-    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        os: [linux, macos]
+        arch: [x64, arm64]
+
+    runs-on: ${{ case( matrix.os == 'linux' && matrix.arch == 'x64', 'ubuntu-22.04', matrix.os == 'linux' && matrix.arch == 'arm64', 'ubuntu-22.04-arm', matrix.os == 'macos' && matrix.arch == 'x64', 'macos-26-intel', matrix.os == 'macos' && matrix.arch == 'arm64', 'macos-26', 'ERROR' ) }}
+
     steps:
       - name: Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1
@@ -40,10 +46,27 @@ jobs:
 
       - uses: jdx/mise-action@6612f0ef07ed2a736cd1e00a94a065522dd41195  # v5.2.5
 
+      - name: Determine latest version of Bashly
+        id: version
+        run: |
+          echo "value=$(just latest-version)" >>"${GITHUB_OUTPUT}"
+
       - name: Build & Test
         env:
           GH_TOKEN: ${{ github.token }}
+          OS: ${{ matrix.os }}
+          ARCH: ${{ matrix.arch }}
+          VERSION: ${{ steps.version.outputs.value }}
         run: |
-          version="$(just latest-version)"
-          just build "${version}" linux x64
-          just test "${version}" linux x64
+          just build "${VERSION}" "${OS}" "${ARCH}"
+          just test "${VERSION}" "${OS}" "${ARCH}"
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: bashly-${{ steps.version.outputs.value }}-${{matrix.os}}-${{matrix.arch}}.tar.gz
+          path: artifacts/bashly-${{ steps.version.outputs.value }}-${{matrix.os}}-${{matrix.arch}}.tar.gz
+
+# TODO:
+# - [ ] linux-x64-musl
+# - [ ] linux-arm64-musl
