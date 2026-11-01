@@ -40,7 +40,10 @@ jobs:
 
       - uses: jdx/mise-action@6612f0ef07ed2a736cd1e00a94a065522dd41195  # v5.2.5
 
-      - run: |
+      - name: Build & Test
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
           version="$(just latest-version)"
           just build "${version}" linux x64
           just test "${version}" linux x64
