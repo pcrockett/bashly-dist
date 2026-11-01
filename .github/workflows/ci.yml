@@ -63,10 +63,10 @@ jobs:
           just test "${VERSION}" "${OS}" "${ARCH}"
 
       - name: Upload artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9  # v7.0.2
         with:
-          name: bashly-${{ steps.version.outputs.value }}-${{matrix.os}}-${{matrix.arch}}.tar.gz
-          path: artifacts/bashly-${{ steps.version.outputs.value }}-${{matrix.os}}-${{matrix.arch}}.tar.gz
+          path: artifacts/bashly-${{steps.version.outputs.value}}-${{matrix.os}}-${{matrix.arch}}.tar.gz
+          archive: false
 
 # TODO:
 # - [ ] linux-x64-musl
