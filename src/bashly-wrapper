@@ -1,0 +1,4 @@
+#!/usr/bin/env sh
+GEM_HOME="$(CDPATH='' cd -- "$(dirname -- "$0")/../gems" && pwd)"
+export GEM_HOME
+exec "$GEM_HOME/bin/bashly" "$@"

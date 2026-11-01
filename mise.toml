@@ -1,0 +1,13 @@
+[tools]
+actionlint = "latest"
+just = "latest"
+pre-commit = "latest"
+ruby = "latest"
+shellcheck = "latest"
+shfmt = "latest"
+uv = "latest" # only for yamllint below
+yamlfmt = "latest"
+yamllint = "latest"
+
+[settings]
+lockfile_platforms = ["linux-x64", "linux-x64-musl"]
