@@ -1,3 +1,5 @@
+set positional-arguments
+
 [private]
 _default:
     @just --list
@@ -17,19 +19,24 @@ latest-version:
 build version os arch: clean
     #!/usr/bin/env bash
     set -euo pipefail
+
+    version="$1"
+    os="$2"
+    arch="$3"
+
     mkdir -p build/gems
 
     if [ -d .gem-cache ]; then
         mv .gem-cache build/gems/cache
     fi
-    gem install bashly --version "{{version}}" --install-dir build/gems --no-document
+    gem install bashly --version "${version}" --install-dir build/gems --no-document
     mv build/gems/cache .gem-cache
 
     mkdir build/bin
     cp src/bashly-wrapper build/bin/bashly
 
     mkdir -p artifacts
-    tarball_path="artifacts/bashly-{{version}}-{{os}}-{{arch}}.tar.gz"
+    tarball_path="artifacts/bashly-${version}-${os}-${arch}.tar.gz"
     rm -f "${tarball_path}"
     tar czf "${tarball_path}" -C build bin gems
 
@@ -37,11 +44,16 @@ build version os arch: clean
 test version os arch:
     #!/usr/bin/env bash
     set -euo pipefail
+
+    version="$1"
+    os="$2"
+    arch="$3"
+
     temp_dir="$(mktemp -d)"
-    tar xzf "artifacts/bashly-{{version}}-{{os}}-{{arch}}.tar.gz" -C "${temp_dir}"
+    tar xzf "artifacts/bashly-${version}-${os}-${arch}.tar.gz" -C "${temp_dir}"
     bashly_version="$("${temp_dir}/bin/bashly" --version)"
     rm -rf "${temp_dir}"
-    if [ "${bashly_version}" = "{{version}}" ]; then
+    if [ "${bashly_version}" = "${version}" ]; then
         echo "SUCCESS: Result of \`bashly --version\`: ${bashly_version}"
     else
         echo "FAIL: Result of \`bashly --version\`: ${bashly_version}"
