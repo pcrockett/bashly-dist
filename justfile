@@ -63,3 +63,7 @@ test version os arch:
 # Delete `build` directory
 clean:
     rm -rf build
+
+# Trigger the Release workflow in GitHub
+release version:
+    gh workflow run release.yml --ref main --field version={{version}}
