@@ -1,0 +1,111 @@
+# yaml-language-server: $schema=https://www.schemastore.org/github-workflow.json
+
+name: Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: Bashly version to release (defaults to the latest upstream release)
+        required: false
+        type: string
+        default: ""
+  schedule:
+    # once per day, at 04:34 UTC
+    - cron: "34 4 * * *"
+
+permissions:
+  contents: read
+
+jobs:
+
+  check:
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.resolve.outputs.version }}
+      should_release: ${{ steps.exists.outputs.should_release }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: jdx/mise-action@6612f0ef07ed2a736cd1e00a94a065522dd41195  # v5.2.5
+      - name: Resolve version
+        id: resolve
+        env:
+          GH_TOKEN: ${{ github.token }}
+          INPUT_VERSION: ${{ inputs.version }}
+        run: |
+          version="${INPUT_VERSION#v}"
+          if [ -z "${version}" ]; then
+            version="$(just latest-version)"
+          fi
+          gh release view --repo bashly-framework/bashly "v${version}" >/dev/null
+          echo "version=${version}" >>"${GITHUB_OUTPUT}"
+      - name: Check for existing release
+        id: exists
+        env:
+          GH_TOKEN: ${{ github.token }}
+          VERSION: ${{ steps.resolve.outputs.version }}
+        run: |
+          if gh release view --repo "${GITHUB_REPOSITORY}" "v${VERSION}" >/dev/null 2>&1; then
+            echo "Release v${VERSION} already exists; skipping."
+            echo "should_release=false" >>"${GITHUB_OUTPUT}"
+          else
+            echo "should_release=true" >>"${GITHUB_OUTPUT}"
+          fi
+
+  build:
+    needs: check
+    if: needs.check.outputs.should_release == 'true'
+    strategy:
+      matrix:
+        os: [linux, macos]
+        arch: [x64, arm64]
+    runs-on: ${{ case( matrix.os == 'linux' && matrix.arch == 'x64', 'ubuntu-22.04', matrix.os == 'linux' && matrix.arch == 'arm64', 'ubuntu-22.04-arm', matrix.os == 'macos' && matrix.arch == 'x64', 'macos-26-intel', matrix.os == 'macos' && matrix.arch == 'arm64', 'macos-26', 'ERROR' ) }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9  # v6.1.0
+        with:
+          path: .gem-cache
+          key: gem-cache|${{ hashFiles('mise.toml') }}|${{ hashFiles('mise.lock') }}|${{ hashFiles('justfile') }}
+      - uses: jdx/mise-action@6612f0ef07ed2a736cd1e00a94a065522dd41195  # v5.2.5
+      - name: Build & Test
+        env:
+          OS: ${{ matrix.os }}
+          ARCH: ${{ matrix.arch }}
+          VERSION: ${{ needs.check.outputs.version }}
+        run: |
+          just build "${VERSION}" "${OS}" "${ARCH}"
+          just test "${VERSION}" "${OS}" "${ARCH}"
+      - name: Upload artifact
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9  # v7.0.2
+        with:
+          path: artifacts/bashly-${{ needs.check.outputs.version }}-${{ matrix.os }}-${{ matrix.arch }}.tar.gz
+          archive: false
+
+  publish:
+    needs: [check, build]
+    if: needs.check.outputs.should_release == 'true'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Download artifacts
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333  # v8.0.2
+        with:
+          pattern: bashly-*
+          path: artifacts
+          merge-multiple: true
+      - name: Create release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          VERSION: ${{ needs.check.outputs.version }}
+        run: |
+          gh release create "v${VERSION}" artifacts/*.tar.gz \
+            --repo "${GITHUB_REPOSITORY}" \
+            --title "v${VERSION}" \
+            --notes "Locked distribution of [Bashly](https://bashly.dev/) v${VERSION}."
