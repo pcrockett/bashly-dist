@@ -13,12 +13,6 @@ url = "https://github.com/rhysd/actionlint/releases/download/v1.7.12/actionlint_
 url_api = "https://api.github.com/repos/rhysd/actionlint/releases/assets/384924897"
 provenance = "github-attestations"
 
-[tools.actionlint."platforms.linux-arm64-musl"]
-checksum = "sha256:325e971b6ba9bfa504672e29be93c24981eeb1c07576d730e9f7c8805afff0c6"
-url = "https://github.com/rhysd/actionlint/releases/download/v1.7.12/actionlint_1.7.12_linux_arm64.tar.gz"
-url_api = "https://api.github.com/repos/rhysd/actionlint/releases/assets/384924897"
-provenance = "github-attestations"
-
 [tools.actionlint."platforms.linux-x64"]
 checksum = "sha256:8aca8db96f1b94770f1b0d72b6dddcb1ebb8123cb3712530b08cc387b349a3d8"
 url = "https://github.com/rhysd/actionlint/releases/download/v1.7.12/actionlint_1.7.12_linux_amd64.tar.gz"
@@ -54,12 +48,6 @@ checksum_source = "mise-versions"
 url = "https://github.com/casey/just/releases/download/1.59.0/just-1.59.0-aarch64-unknown-linux-musl.tar.gz"
 url_api = "https://api.github.com/repos/casey/just/releases/assets/642950086"
 
-[tools.just."platforms.linux-arm64-musl"]
-checksum = "sha256:23871b1702bfd550fb5f901778fd4290ecf2ee034a45a889fbe96d89b188086d"
-checksum_source = "mise-versions"
-url = "https://github.com/casey/just/releases/download/1.59.0/just-1.59.0-aarch64-unknown-linux-musl.tar.gz"
-url_api = "https://api.github.com/repos/casey/just/releases/assets/642950086"
-
 [tools.just."platforms.linux-x64"]
 checksum = "sha256:409044617b6f06517c1035e55ca38c8c856ff8b650e41bc2aa1ef82d5903a23e"
 checksum_source = "mise-versions"
@@ -90,12 +78,6 @@ backend = "aqua:pre-commit/pre-commit"
 specifiers = ["latest"]
 
 [tools.pre-commit."platforms.linux-arm64"]
-checksum = "sha256:393488513aed286d7a5a978a1fe79b2f5a8802927242a2d241ff10c1a8e8c885"
-checksum_source = "mise-versions"
-url = "https://github.com/pre-commit/pre-commit/releases/download/v4.7.0/pre-commit-4.7.0.pyz"
-url_api = "https://api.github.com/repos/pre-commit/pre-commit/releases/assets/637459099"
-
-[tools.pre-commit."platforms.linux-arm64-musl"]
 checksum = "sha256:393488513aed286d7a5a978a1fe79b2f5a8802927242a2d241ff10c1a8e8c885"
 checksum_source = "mise-versions"
 url = "https://github.com/pre-commit/pre-commit/releases/download/v4.7.0/pre-commit-4.7.0.pyz"
@@ -141,10 +123,6 @@ checksum = "sha256:e115ae4dce7193d862e1f105d7969472f0fcead4a440bbb08c9af92528ed0
 url = "https://github.com/jdx/ruby/releases/download/4.0.9-1/ruby-4.0.9.arm64_linux.tar.gz"
 provenance = "github-attestations"
 
-[tools.ruby."platforms.linux-arm64-musl"]
-checksum = "sha256:c35350682ff050b79702d57ade4516e7336063f510155d19fb2fb5b3f3909511"
-url = "https://cache.ruby-lang.org/pub/ruby/4.0/ruby-4.0.9.tar.gz"
-
 [tools.ruby."platforms.linux-x64"]
 checksum = "sha256:7e74db7ddb8f44f534fa4937d98b6d1691e053c5c190af6d130464b0467e87c4"
 url = "https://github.com/jdx/ruby/releases/download/4.0.9-1/ruby-4.0.9.x86_64_linux.tar.gz"
@@ -169,12 +147,6 @@ backend = "aqua:koalaman/shellcheck"
 specifiers = ["latest"]
 
 [tools.shellcheck."platforms.linux-arm64"]
-checksum = "sha256:12b331c1d2db6b9eb13cfca64306b1b157a86eb69db83023e261eaa7e7c14588"
-checksum_source = "mise-versions"
-url = "https://github.com/koalaman/shellcheck/releases/download/v0.11.0/shellcheck-v0.11.0.linux.aarch64.tar.xz"
-url_api = "https://api.github.com/repos/koalaman/shellcheck/releases/assets/279056934"
-
-[tools.shellcheck."platforms.linux-arm64-musl"]
 checksum = "sha256:12b331c1d2db6b9eb13cfca64306b1b157a86eb69db83023e261eaa7e7c14588"
 checksum_source = "mise-versions"
 url = "https://github.com/koalaman/shellcheck/releases/download/v0.11.0/shellcheck-v0.11.0.linux.aarch64.tar.xz"
@@ -215,12 +187,6 @@ checksum_source = "mise-versions"
 url = "https://github.com/mvdan/sh/releases/download/v3.14.1/shfmt_v3.14.1_linux_arm64"
 url_api = "https://api.github.com/repos/mvdan/sh/releases/assets/547320869"
 
-[tools.shfmt."platforms.linux-arm64-musl"]
-checksum = "sha256:5f2db09dae91fca848f7adbdd014632e921a383863a2ad7e0450ad3aba0c6489"
-checksum_source = "mise-versions"
-url = "https://github.com/mvdan/sh/releases/download/v3.14.1/shfmt_v3.14.1_linux_arm64"
-url_api = "https://api.github.com/repos/mvdan/sh/releases/assets/547320869"
-
 [tools.shfmt."platforms.linux-x64"]
 checksum = "sha256:76e77641faa025814b77f153b29796b8e6fa2fca03e0c76a691608b86c7ea7bf"
 checksum_source = "mise-versions"
@@ -256,12 +222,6 @@ url = "https://github.com/astral-sh/uv/releases/download/0.13.5/uv-aarch64-unkno
 url_api = "https://api.github.com/repos/astral-sh/uv/releases/assets/664335837"
 provenance = "github-attestations"
 
-[tools.uv."platforms.linux-arm64-musl"]
-checksum = "sha256:7906c79adb21c81abd559841ba76bb1d9af9d791acac7a041b2972e03ae16538"
-url = "https://github.com/astral-sh/uv/releases/download/0.13.5/uv-aarch64-unknown-linux-musl.tar.gz"
-url_api = "https://api.github.com/repos/astral-sh/uv/releases/assets/664335857"
-provenance = "github-attestations"
-
 [tools.uv."platforms.linux-x64"]
 checksum = "sha256:f68d291c75783122dad58ab77def0e13f3233f358731db5d6d7e8715603b928f"
 url = "https://github.com/astral-sh/uv/releases/download/0.13.5/uv-x86_64-unknown-linux-gnu.tar.gz"
@@ -292,12 +252,6 @@ backend = "aqua:google/yamlfmt"
 specifiers = ["latest"]
 
 [tools.yamlfmt."platforms.linux-arm64"]
-checksum = "sha256:5b2689c963b177271330c5ce8ca7396751107e5a826be46f03d2cb9b6f0c7784"
-checksum_source = "mise-versions"
-url = "https://github.com/google/yamlfmt/releases/download/v0.21.0/yamlfmt_0.21.0_Linux_arm64.tar.gz"
-url_api = "https://api.github.com/repos/google/yamlfmt/releases/assets/336650208"
-
-[tools.yamlfmt."platforms.linux-arm64-musl"]
 checksum = "sha256:5b2689c963b177271330c5ce8ca7396751107e5a826be46f03d2cb9b6f0c7784"
 checksum_source = "mise-versions"
 url = "https://github.com/google/yamlfmt/releases/download/v0.21.0/yamlfmt_0.21.0_Linux_arm64.tar.gz"

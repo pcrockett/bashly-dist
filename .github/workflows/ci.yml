@@ -73,7 +73,7 @@ jobs:
   build-musl:
     strategy:
       matrix:
-        arch: [x64, arm64]
+        arch: [x64]  # arm64 musl not supported by GitHub JavaScript runners at the moment
 
     runs-on: ${{ case( matrix.arch == 'x64', 'ubuntu-22.04', matrix.arch == 'arm64', 'ubuntu-22.04-arm', 'ERROR' ) }}
     # image ruby must track mise.lock's ruby major.minor: the gem extensions

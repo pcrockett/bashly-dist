@@ -10,4 +10,4 @@ yamlfmt = "latest"
 yamllint = "latest"
 
 [settings]
-lockfile_platforms = ["linux-x64", "linux-arm64", "linux-x64-musl", "linux-arm64-musl", "macos-x64", "macos-arm64"]
+lockfile_platforms = ["linux-x64", "linux-arm64", "linux-x64-musl", "macos-x64", "macos-arm64"]
