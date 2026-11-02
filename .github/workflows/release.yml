@@ -87,8 +87,57 @@ jobs:
           path: artifacts/bashly-${{ needs.check.outputs.version }}-${{ matrix.os }}-${{ matrix.arch }}.tar.gz
           archive: false
 
+  build-musl:
+    needs: check
+    if: needs.check.outputs.should_release == 'true'
+    strategy:
+      matrix:
+        arch: [x64, arm64]
+    runs-on: ${{ case( matrix.arch == 'x64', 'ubuntu-22.04', matrix.arch == 'arm64', 'ubuntu-22.04-arm', 'ERROR' ) }}
+    # image ruby must track mise.lock's ruby major.minor: the gem extensions
+    # bundled into the tarball are compiled against this image's ruby
+    container: ruby:4.0-alpine
+    env:
+      # ruby comes from the container image, so mise only manages just here
+      MISE_ENABLE_TOOLS: just
+    steps:
+      - name: Install container packages
+        run: apk add --no-cache bash build-base git
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Check image ruby matches mise.lock
+        run: |
+          lock_minor="$(awk '/^\[\[tools\.ruby\]\]$/{getline; print $3}' mise.lock | tr -d '"' | cut -d. -f1-2)"
+          image_minor="$(ruby -e 'print RUBY_VERSION.split(".")[0, 2].join(".")')"
+          if [ "${lock_minor}" != "${image_minor}" ]; then
+            echo "ERROR: image ruby ${image_minor} does not match mise.lock's ruby ${lock_minor}; update the container image tag"
+            exit 1
+          fi
+      - uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9  # v6.1.0
+        with:
+          path: .gem-cache
+          key: gem-cache|${{ hashFiles('mise.toml') }}|${{ hashFiles('mise.lock') }}|${{ hashFiles('justfile') }}
+      - uses: jdx/mise-action@6612f0ef07ed2a736cd1e00a94a065522dd41195  # v5.2.5
+        with:
+          # only just lives in mise's data dir (a 2s install); nothing worth caching
+          cache: false
+      - name: Build & Test
+        env:
+          VERSION: ${{ needs.check.outputs.version }}
+          ARCH: ${{ matrix.arch }}
+        run: |
+          just build "${VERSION}" linux "${ARCH}-musl"
+          just test "${VERSION}" linux "${ARCH}-musl"
+      - name: Upload artifact
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9  # v7.0.2
+        with:
+          path: artifacts/bashly-${{ needs.check.outputs.version }}-linux-${{ matrix.arch }}-musl.tar.gz
+          archive: false
+
   publish:
-    needs: [check, build]
+    needs: [check, build, build-musl]
     if: needs.check.outputs.should_release == 'true'
     runs-on: ubuntu-latest
     permissions:
