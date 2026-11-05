@@ -6,9 +6,13 @@ install-time:
 
 ```toml
 # mise.toml
-ruby = "latest"
-"github:pcrockett/bashly-dist" = "latest"
+ruby = "4.0"
+"github:pcrockett/bashly-dist" = "2.0.0"
 ```
+
+_One big caveat: Ruby native extensions are compiled against a particular version of
+Ruby, so when you install Bashly this way, you need to be using the same minor version
+of Ruby as the Bashly release build. You shouldn't use `ruby = "latest"`._
 
 ## Platforms
 
