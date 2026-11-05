@@ -1,5 +1,5 @@
 [tools]
-actionlint = "latest"
+jactionlint = "latest"
 just = "latest"
 pre-commit = "latest"
 ruby = "latest"
@@ -8,6 +8,7 @@ shfmt = "latest"
 uv = "latest" # only for yamllint below
 yamlfmt = "latest"
 yamllint = "latest"
+zizmor = "latest"
 
 [settings]
 lockfile_platforms = ["linux-x64", "linux-arm64", "linux-x64-musl", "macos-x64", "macos-arm64"]
