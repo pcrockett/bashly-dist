@@ -62,12 +62,25 @@ jobs:
 
       - uses: jdx/mise-action@6612f0ef07ed2a736cd1e00a94a065522dd41195  # v5.2.5
 
-      - name: Build & Test
+      - name: Build
         env:
           OS: ${{ matrix.os }}
           ARCH: ${{ matrix.arch }}
         run: |
           just build "${VERSION}" "${OS}" "${ARCH}"
+
+      - name: Install modern Bash
+        if: ${{ matrix.os == 'macos' }}
+        run: |
+          # a bashly CLI will be generated in the next step, but it requires at least
+          # bash 4.2
+          brew install bash
+
+      - name: Test
+        env:
+          OS: ${{ matrix.os }}
+          ARCH: ${{ matrix.arch }}
+        run: |
           just test "${VERSION}" "${OS}" "${ARCH}"
 
       - name: Upload artifact
