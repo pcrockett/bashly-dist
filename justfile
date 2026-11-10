@@ -51,7 +51,13 @@ test version os arch:
 
     temp_dir="$(mktemp -d)"
     tar xzf "artifacts/bashly-${version}-${os}-${arch}.tar.gz" -C "${temp_dir}"
-    bashly_version="$("${temp_dir}/bin/bashly" --version)"
+    pushd "${temp_dir}" >/dev/null
+    bashly_version="$(./bin/bashly --version)"
+    ./bin/bashly init
+    ./bin/bashly generate
+    ./cli --help
+    popd >/dev/null
+
     rm -rf "${temp_dir}"
     if [ "${bashly_version}" = "${version}" ]; then
         echo "SUCCESS: bashly --version -> ${bashly_version}"
