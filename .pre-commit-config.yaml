@@ -10,8 +10,11 @@ repos:
       - id: check-shebang-scripts-are-executable
       - id: check-symlinks
       - id: check-yaml
+      # vendored license texts: keep the fixers from rewriting them
       - id: end-of-file-fixer
+        exclude: ^licenses/
       - id: trailing-whitespace
+        exclude: ^licenses/
 
   # local tools assumed to be installed with mise, see mise.toml
   - repo: local
