@@ -3,7 +3,7 @@
 jactionlint = "latest"
 just = "latest"
 pre-commit = "latest"
-ruby = "latest"
+ruby = "4.0" # should match [ref:musl-ruby-image]
 shellcheck = "latest"
 shfmt = "latest"
 uv = "latest" # only for yamllint below
