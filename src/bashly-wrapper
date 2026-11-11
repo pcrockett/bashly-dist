@@ -1,4 +1,7 @@
 #!/usr/bin/env sh
-GEM_HOME="$(CDPATH='' cd -- "$(dirname -- "$0")/../gems" && pwd)"
-export GEM_HOME
-exec "$GEM_HOME/bin/bashly" "$@"
+ROOT="$(CDPATH='' cd -- "$(dirname -- "$0")/.." && pwd)"
+export GEM_HOME="$ROOT/gems"
+export GEM_PATH="$ROOT/gems"
+LD_LIBRARY_PATH="$ROOT/ruby/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
+export LD_LIBRARY_PATH
+exec "$ROOT/ruby/bin/ruby" -x "$GEM_HOME/bin/bashly" "$@"

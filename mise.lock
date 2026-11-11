@@ -2,6 +2,41 @@
 
 lockfile_version = 3
 
+[[tools."github:stepchowfun/tagref"]]
+version = "1.14.0"
+backend = "github:stepchowfun/tagref"
+specifiers = ["latest"]
+
+[tools."github:stepchowfun/tagref"."platforms.linux-arm64"]
+checksum = "sha256:44672df71e3ef6ea14a65f27798b950ac55df0f90fc7b732f563f0f0594ce56f"
+checksum_source = "mise-versions"
+url = "https://github.com/stepchowfun/tagref/releases/download/v1.14.0/tagref-aarch64-unknown-linux-gnu"
+url_api = "https://api.github.com/repos/stepchowfun/tagref/releases/assets/581362835"
+
+[tools."github:stepchowfun/tagref"."platforms.linux-x64"]
+checksum = "sha256:2e325a785f07b99df90a848221ac40229b4444155c0418cebb2da7b1019971f2"
+checksum_source = "mise-versions"
+url = "https://github.com/stepchowfun/tagref/releases/download/v1.14.0/tagref-x86_64-unknown-linux-gnu"
+url_api = "https://api.github.com/repos/stepchowfun/tagref/releases/assets/581362834"
+
+[tools."github:stepchowfun/tagref"."platforms.linux-x64-musl"]
+checksum = "sha256:8889b8ce15c4e6dbafe36660723602e3a2a4ba0c5b7ffbd7b9167451fceef8c4"
+checksum_source = "mise-versions"
+url = "https://github.com/stepchowfun/tagref/releases/download/v1.14.0/tagref-x86_64-unknown-linux-musl"
+url_api = "https://api.github.com/repos/stepchowfun/tagref/releases/assets/581362838"
+
+[tools."github:stepchowfun/tagref"."platforms.macos-arm64"]
+checksum = "sha256:9aa5731615312fd468743818abfa72b90027cbe0ddffb6bb372dde4f9219b292"
+checksum_source = "mise-versions"
+url = "https://github.com/stepchowfun/tagref/releases/download/v1.14.0/tagref-aarch64-apple-darwin"
+url_api = "https://api.github.com/repos/stepchowfun/tagref/releases/assets/581362854"
+
+[tools."github:stepchowfun/tagref"."platforms.macos-x64"]
+checksum = "sha256:ad8cbef0fbaac6f6f0446116b99b4a91cb3995186f013b36c98cd113d6199560"
+checksum_source = "mise-versions"
+url = "https://github.com/stepchowfun/tagref/releases/download/v1.14.0/tagref-x86_64-apple-darwin"
+url_api = "https://api.github.com/repos/stepchowfun/tagref/releases/assets/581362833"
+
 [[tools.jactionlint]]
 version = "2.3.0"
 backend = "packslip:github.com/jdx/jactionlint"
@@ -110,7 +145,7 @@ url_api = "https://api.github.com/repos/pre-commit/pre-commit/releases/assets/63
 [[tools.ruby]]
 version = "4.0.9"
 backend = "core:ruby"
-specifiers = ["latest"]
+specifiers = ["4.0"]
 
 [tools.ruby.options]
 compile = "false"

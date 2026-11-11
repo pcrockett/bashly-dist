@@ -17,28 +17,7 @@ latest-version:
 
 # Build the release archive
 build version os arch: clean
-    #!/usr/bin/env bash
-    set -euo pipefail
-
-    version="$1"
-    os="$2"
-    arch="$3"
-
-    mkdir -p build/gems
-
-    if [ -d .gem-cache ]; then
-        mv .gem-cache build/gems/cache
-    fi
-    gem install bashly --version "${version}" --install-dir build/gems --no-document
-    mv build/gems/cache .gem-cache
-
-    mkdir build/bin
-    cp src/bashly-wrapper build/bin/bashly
-
-    mkdir -p artifacts
-    tarball_path="artifacts/bashly-${version}-${os}-${arch}.tar.gz"
-    rm -f "${tarball_path}"
-    tar czf "${tarball_path}" -C build bin gems
+    ./src/build.sh {{version}} {{os}} {{arch}}
 
 # Smoke-test a built tarball
 test version os arch:
@@ -50,15 +29,33 @@ test version os arch:
     arch="$3"
 
     temp_dir="$(mktemp -d)"
+    trap 'rm -rf "${temp_dir}"' EXIT
     tar xzf "artifacts/bashly-${version}-${os}-${arch}.tar.gz" -C "${temp_dir}"
+
+    # mise puts only top-level bin/ on PATH, so nothing else may leak out
+    bin_entries="$(find "${temp_dir}/bin" -mindepth 1 -maxdepth 1 -exec basename {} \;)"
+    if [ "${bin_entries}" != "bashly" ]; then
+        echo "FAIL: top-level bin/ must contain only bashly, got: ${bin_entries}"
+        exit 1
+    fi
+
     pushd "${temp_dir}" >/dev/null
-    bashly_version="$(./bin/bashly --version)"
-    ./bin/bashly init
-    ./bin/bashly generate
-    ./cli --help
+    # hermetic: no modern ruby on PATH, so the binstub's polyglot fallback can
+    # never leak in a system ruby
+    hermetic() {
+        env -i PATH="/usr/bin:/bin" HOME="${temp_dir}" "$@"
+    }
+    bashly_version="$(hermetic ./bin/bashly --version)"
+    hermetic ./bin/bashly init
+    hermetic ./bin/bashly generate
+    if [ "${os}" = macos ]; then
+        # the generated CLI needs bash >= 4.2; /bin/bash is 3.2 on macOS
+        hermetic "$(command -v bash)" ./cli --help
+    else
+        hermetic ./cli --help
+    fi
     popd >/dev/null
 
-    rm -rf "${temp_dir}"
     if [ "${bashly_version}" = "${version}" ]; then
         echo "SUCCESS: bashly --version -> ${bashly_version}"
     else

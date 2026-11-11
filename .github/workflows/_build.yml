@@ -100,7 +100,7 @@ jobs:
     timeout-minutes: 30
     # image ruby must track mise.lock's ruby major.minor: the gem extensions
     # bundled into the tarball are compiled against this image's ruby
-    # (digest-pinned; re-pin when bumping the image)
+    # [tag:musl-ruby-image]
     container: ruby:4.0-alpine@sha256:f1e530793cc09e1093417a4c9956069407155e1883d02beb30bda35ae54a47a3
     env:
       # ruby comes from the container image, so mise only manages just here
