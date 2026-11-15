@@ -85,4 +85,4 @@ jobs:
           gh release create "v${VERSION}" artifacts/*.tar.gz \
             --repo "${GITHUB_REPOSITORY}" \
             --title "v${VERSION}" \
-            --notes "Locked distribution of [Bashly](https://bashly.dev/) v${VERSION}."
+            --notes "Locked distribution of [Bashly](https://bashly.dev/) v${VERSION}. Each tarball bundles its own Ruby, so no Ruby installation is needed; Ruby is redistributed under the Ruby license (see ruby/COPYING in the tarball)."
